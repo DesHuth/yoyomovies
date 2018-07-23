@@ -6,13 +6,40 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+    <fragment
+        android:id="@+id/appbar_fragment"
+        android:name="uk.co.perfecthomecomputers.yoyocinema.AppbarFragment"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        app:layout_constraintBottom_toTopOf="@+id/info_fragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/fragment_appbar" />
+
+    <fragment
+        android:id="@+id/info_fragment"
+        android:name="uk.co.perfecthomecomputers.yoyocinema.InfoFragment"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        app:layout_constraintBottom_toTopOf="@+id/movie_list_fragment"
+        app:layout_constraintEnd_toEndOf="@+id/appbar_fragment"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/appbar_fragment"
+        app:layout_constraintTop_toBottomOf="@+id/appbar_fragment"
+        tools:layout="@layout/fragment_info" />
+
+    <fragment
+        android:id="@+id/movie_list_fragment"
+        android:name="uk.co.perfecthomecomputers.yoyocinema.MovieListFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/info_fragment"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/info_fragment"
+        app:layout_constraintTop_toBottomOf="@+id/info_fragment"
+        tools:layout="@layout/fragment_movie_list" />
 
 </android.support.constraint.ConstraintLayout>

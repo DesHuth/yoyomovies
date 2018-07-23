@@ -1,3 +1,38 @@
 <resources>
     <string name="app_name">Yoyo Cinema</string>
+
+    <!--  Main Activity  -->
+
+    <!--  App Bar Fragment  -->
+    <string name="search_icon_description">Search Icon</string>
+    <string name="favourites_icon_description">Favourites Icon</string>
+    <string name="search_hintext">Search for...</string>
+
+    <!--  Info Fragment  -->
+    <plurals name="results_displayed">
+        <item quantity="one">One result found</item>
+        <item quantity="other">%d results found</item>
+    </plurals>
+    <string name="results_placeholder">Fetching results</string>
+    <string name="results_error">Error fetching results</string>
+
+    <!--  Results Fragment  -->
+    <string name="rating">Rating %d</string>
+    <string name="poster_description">Poster Image</string>
+    <string name="title_placeholder">Movie Title Placeholder</string>
+    <string name="description_placeholder">For centuries, a small but powerful force of warriors called the Green Lantern Corps has sworn to keep intergalactic order. Each Green Lantern wears a ring that grants him superpowers. But when a new enemy called Parallax threatens to destroy the balance of power in the Universe, their fate and the fate of Earth lie in the hands of the first human ever recruited.</string>
+    <string name="release_placeholder">Released 01 December 1999</string>
+    <string name="favourite_description">Favourite Button</string>
+
+    <!--  Movie Details Activity  -->
+    <string name="website">website: http://greenlanternmovie.warnerbros.com/</string>
+    <string name="genres">genres: Adventure, Action, Thriller, Science Fiction</string>
+    <string name="budget">Budget:</string>
+    <string name="revenue">Revenue:</string>
+    <string name="runtime">Runtime:</string>
+    <string name="budget_details">$200,000,000</string>
+    <string name="revenue_details">$350,000,000</string>
+    <string name="runtime_details">114 Minutes</string>
+    <string name="production_company_logo">Production Company Logo</string>
+
 </resources>
