@@ -2,8 +2,9 @@ package uk.co.perfecthomecomputers.yoyocinema.objects
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-class Movie {
+class Movie: Serializable {
 //  Movie Details
 
     @SerializedName("adult")

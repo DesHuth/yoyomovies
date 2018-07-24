@@ -11,7 +11,9 @@ object FirstRun {
 
         val sharedPref = PreferenceHelper.defaultPrefs(context)
         sharedPref["firstRun"] = false
-        sharedPref["baseUrl"] = "https://api.themoviedb.org/3/search/movie/"
+        sharedPref["baseUrl"] = "https://api.themoviedb.org/3/"
+        sharedPref["imageBaseUrlW200"] = "https://image.tmdb.org/t/p/w200/"
+        sharedPref["imageBaseUrlW500"] = "https://image.tmdb.org/t/p/w500/"
 
         //  Create and Initialise Database
 

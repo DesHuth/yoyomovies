@@ -24,11 +24,6 @@ class AppbarFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_appbar, container, false)
     }
 
-    fun searchTextChanged(searchText: String) {
-        //  Pass text to Activity
-        listener?.onSearchTextChanged(searchText)
-    }
-
     override fun onStart() {
         super.onStart()
         //  Add listeners to EditText
@@ -55,6 +50,7 @@ class AppbarFragment : Fragment() {
         super.onDetach()
         listener = null
     }
+
     interface OnFragmentInteractionListener {
         fun onSearchTextChanged(searchText: String)
     }
@@ -78,5 +74,10 @@ class AppbarFragment : Fragment() {
             val text = editable.toString()
             searchTextChanged(text)
         }
+    }
+
+    fun searchTextChanged(searchText: String) {
+        //  Pass text to MainActivity
+        listener?.onSearchTextChanged(searchText)
     }
 }

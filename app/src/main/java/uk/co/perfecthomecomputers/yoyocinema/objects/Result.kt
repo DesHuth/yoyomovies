@@ -2,8 +2,9 @@ package uk.co.perfecthomecomputers.yoyocinema.objects
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-class Result {
+class Result: Serializable {
 //  Required by SearchResults Class
 
     @SerializedName("vote_count")
@@ -17,7 +18,7 @@ class Result {
     var video: Boolean? = null
     @SerializedName("vote_average")
     @Expose
-    var voteAverage: Int? = null
+    var voteAverage: Float? = null
     @SerializedName("title")
     @Expose
     var title: String? = null
