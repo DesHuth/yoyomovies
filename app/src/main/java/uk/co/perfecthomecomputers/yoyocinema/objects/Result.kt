@@ -49,5 +49,8 @@ class Result: Serializable {
     @SerializedName("release_date")
     @Expose
     var releaseDate: String? = null
+    @SerializedName("is_favourite")
+    @Expose
+    var isFavourite: Boolean? = false
 
 }

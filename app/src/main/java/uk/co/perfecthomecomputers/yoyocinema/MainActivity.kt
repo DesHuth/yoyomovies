@@ -3,10 +3,10 @@ package uk.co.perfecthomecomputers.yoyocinema
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.database.Cursor
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.util.Log
-import android.widget.Toast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -15,6 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import uk.co.perfecthomecomputers.yoyocinema.objects.Result
 import uk.co.perfecthomecomputers.yoyocinema.objects.SearchResults
 import uk.co.perfecthomecomputers.yoyocinema.retrofit.YoyoClient
+import uk.co.perfecthomecomputers.yoyocinema.utils.DataSource
 import uk.co.perfecthomecomputers.yoyocinema.utils.FirstRun
 import uk.co.perfecthomecomputers.yoyocinema.utils.PreferenceHelper
 import uk.co.perfecthomecomputers.yoyocinema.utils.PreferenceHelper.get
@@ -67,8 +68,20 @@ class MainActivity : FragmentActivity(), AppbarFragment.OnFragmentInteractionLis
                         override fun onResponse(call: Call<SearchResults>, response: Response<SearchResults>) {
                             Log.d("YOYO", "RESPONSE CODE: "+ response.code())
                             if (response.code() == 200) {
+                                val db = DataSource(context)
+                                db.open()
                                 val searchResults :SearchResults? = response.body()
                                 val results: List<Result> = searchResults!!.results!!
+                                //  Check for favourites
+                                var i: Int = 0
+                                while (i < results.size) {
+                                    val cursor: Cursor = db.query("SELECT id FROM favourites WHERE id=" + results[i].id)
+                                    cursor.moveToFirst()
+                                    results[i].isFavourite = !cursor.isAfterLast
+                                    cursor.close()
+                                    i++
+                                }
+                                db.close()
                                 movieListFragment?.setData(context, results)
                             }
                         }

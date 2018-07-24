@@ -1,5 +1,6 @@
 package uk.co.perfecthomecomputers.yoyocinema
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
@@ -17,7 +18,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import uk.co.perfecthomecomputers.yoyocinema.objects.Genre
 import uk.co.perfecthomecomputers.yoyocinema.objects.Movie
 import uk.co.perfecthomecomputers.yoyocinema.objects.Result
-import uk.co.perfecthomecomputers.yoyocinema.objects.SearchResults
 import uk.co.perfecthomecomputers.yoyocinema.retrofit.YoyoClient
 import uk.co.perfecthomecomputers.yoyocinema.utils.PreferenceHelper
 import uk.co.perfecthomecomputers.yoyocinema.utils.PreferenceHelper.get
@@ -25,16 +25,20 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import android.util.DisplayMetrics
+import android.view.View
+import android.widget.ImageButton
+import uk.co.perfecthomecomputers.yoyocinema.utils.DataSource
+import java.net.URLEncoder
 
 
-
-class MovieDetailActivity : AppCompatActivity() {
+class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var sharedPref: SharedPreferences
     private lateinit var imageBaseUrlW200: String
     private lateinit var imageBaseUrlW500: String
     lateinit var result: Result
     lateinit var movie: Movie
+    lateinit var context: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,11 +48,34 @@ class MovieDetailActivity : AppCompatActivity() {
         sharedPref = PreferenceHelper.defaultPrefs(this)
         imageBaseUrlW200 = sharedPref["imageBaseUrlW200"]!!
         imageBaseUrlW500 = sharedPref["imageBaseUrlW500"]!!
+        context = this
 
+        movie_favourite_button.setOnClickListener(this)
         //  Populate the view with the information available from the search Result object
         createView()
         //  Get full movie details
         getMovie()
+    }
+
+    override fun onClick(view: View?) {
+        when (view!!.id) {
+            R.id.movie_favourite_button -> {
+                val db = DataSource(context)
+                db.open()
+                if (result.isFavourite!!) {
+                    result.isFavourite = false
+                    movie_favourite_button.setImageResource(R.drawable.favourite_false)
+                    db.execute("DELETE FROM favourites WHERE id=" + result.id)
+                } else {
+                    result.isFavourite = true
+                    movie_favourite_button.setImageResource(R.drawable.favourite_true)
+                    val title: String = URLEncoder.encode(result.title, "UTF-8")
+                    val overview: String = URLEncoder.encode(result.overview, "UTF-8")
+                    db.execute("INSERT INTO favourites (id, vote_average, title, poster_path, overview, release_date) VALUES (${result.id}, '${result.voteAverage}', '$title', '${result.posterPath}', '$overview', '${result.releaseDate}')")
+                }
+                db.close()
+            }
+        }
     }
 
     private fun createView() {
@@ -75,6 +102,9 @@ class MovieDetailActivity : AppCompatActivity() {
         val height: Int = width * 281 / 500
         header_image.layoutParams.height = height
 
+        if (result.isFavourite!!) {
+          movie_favourite_button.setImageResource(R.drawable.favourite_true)
+        }
         movie_title.setText(result.title)
 
         Glide.with(this)
@@ -127,11 +157,15 @@ class MovieDetailActivity : AppCompatActivity() {
                             genreList = genreList.substring(0, genreList.length - 1)
                             genre.setText(genreList)
 
-                            val formatter = DecimalFormat("$###,###,###.00")
+                            val formatter = DecimalFormat("$###,###,###")
 
                             budget_details_text.setText(formatter.format(movie.budget))
                             revenue_details_text.setText(formatter.format(movie.revenue))
-                            runtime_details_text.setText(movie.runtime.toString() + " " + resources.getString(R.string.runtime_details))
+                            if (movie.runtime == null) {
+                                runtime_details_text.setText("")
+                            } else {
+                                runtime_details_text.setText(movie.runtime.toString() + " " + resources.getString(R.string.runtime_details))
+                            }
                         }
                     }
 

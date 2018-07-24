@@ -2,21 +2,26 @@ package uk.co.perfecthomecomputers.yoyocinema.adapters
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.database.Cursor
 import android.net.Uri
 import android.support.v4.widget.CircularProgressDrawable
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import uk.co.perfecthomecomputers.yoyocinema.R
 import uk.co.perfecthomecomputers.yoyocinema.objects.Result
+import uk.co.perfecthomecomputers.yoyocinema.utils.DataSource
 import uk.co.perfecthomecomputers.yoyocinema.utils.PreferenceHelper
 import uk.co.perfecthomecomputers.yoyocinema.utils.PreferenceHelper.get
+import java.net.URLEncoder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -54,11 +59,42 @@ class MoviesAdapter(c: Context, val moviesList: List<Result>, val clickListener:
 
         holder.rating.setText(context.resources.getString(R.string.rating) + " " + result.voteAverage.toString())
         holder.title.setText(result.title)
-        holder.favouriteButton.setImageResource(R.drawable.favourite_true)
+
+        val db = DataSource(context)
+        db.open()
+        val cursor: Cursor = db.query("SELECT id FROM favourites WHERE id=" + result.id)
+        cursor.moveToFirst()
+        if (cursor.isAfterLast) {
+            holder.favouriteButton.setImageResource(R.drawable.favourite_false)
+        } else {
+            holder.favouriteButton.setImageResource(R.drawable.favourite_true)
+        }
+        cursor.close()
+        db.close()
+
         holder.description.setText(result.overview)
         holder.releaseDate.setText(formatDate(result.releaseDate!!))
 
+        //  Row click listener, passed to MainActivity onItemClicked
         (holder as ViewHolder).bind(moviesList[position], clickListener)
+
+        //  Favourite Button Click Handler
+        holder.favouriteButton.setOnClickListener {
+            val db = DataSource(context)
+            db.open()
+            if (moviesList[position].isFavourite!!) {
+                moviesList[position].isFavourite = false
+                holder.favouriteButton.setImageResource(R.drawable.favourite_false)
+                db.execute("DELETE FROM favourites WHERE id=" + moviesList[position].id)
+            } else {
+                moviesList[position].isFavourite = true
+                holder.favouriteButton.setImageResource(R.drawable.favourite_true)
+                val title: String = URLEncoder.encode(moviesList[position].title, "UTF-8")
+                val overview: String = URLEncoder.encode(moviesList[position].overview, "UTF-8")
+                db.execute("INSERT INTO favourites (id, vote_average, title, poster_path, overview, release_date) VALUES (${moviesList[position].id}, '${moviesList[position].voteAverage}', '$title', '${moviesList[position].posterPath}', '$overview', '${moviesList[position].releaseDate}')")
+            }
+            db.close()
+        }
     }
 
     override fun getItemCount(): Int {
