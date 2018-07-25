@@ -6,8 +6,6 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.widget.CircularProgressDrawable
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -28,8 +26,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.util.DisplayMetrics
 import android.view.View
-import uk.co.perfecthomecomputers.yoyocinema.objects.ProductionCompany
 import uk.co.perfecthomecomputers.yoyocinema.utils.DataSource
+import uk.co.perfecthomecomputers.yoyocinema.utils.PreferenceHelper.set
 import java.net.URLEncoder
 
 
@@ -41,16 +39,20 @@ class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var result: Result
     lateinit var movie: Movie
     lateinit var context: Context
+    var favouriteStartState: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
         val result: Result = intent.extras.get("result") as Result
         this.result = result
+
         sharedPref = PreferenceHelper.defaultPrefs(this)
         imageBaseUrlW200 = sharedPref["imageBaseUrlW200"]!!
         imageBaseUrlW500 = sharedPref["imageBaseUrlW500"]!!
         context = this
+
+        favouriteStartState = result.isFavourite!!
 
         movie_favourite_button.setOnClickListener(this)
         //  Populate the view with the information available from the search Result object
@@ -74,6 +76,11 @@ class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
                     val title: String = URLEncoder.encode(result.title, "UTF-8")
                     val overview: String = URLEncoder.encode(result.overview, "UTF-8")
                     db.execute("INSERT INTO favourites (id, vote_average, title, poster_path, overview, release_date) VALUES (${result.id}, '${result.voteAverage}', '$title', '${result.posterPath}', '$overview', '${result.releaseDate}')")
+                }
+                if (result.isFavourite == favouriteStartState) {
+                    sharedPref["currentRowNo"] = -1
+                } else {
+                    sharedPref["currentRowNo"] = result.rowNumber
                 }
                 db.close()
             }

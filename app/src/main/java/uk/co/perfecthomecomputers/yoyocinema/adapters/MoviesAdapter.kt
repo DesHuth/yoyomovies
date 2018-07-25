@@ -118,8 +118,8 @@ class MoviesAdapter(c: Context, val moviesList: List<Result>, val clickListener:
             releaseDate = view.findViewById(R.id.release_date)
         }
 
-        fun bind(part: Result, clickListener: (Result) -> Unit) {
-            itemView.setOnClickListener { clickListener(part) }
+        fun bind(item: Result, clickListener: (Result) -> Unit) {
+            itemView.setOnClickListener { clickListener(item) }
         }
     }
 

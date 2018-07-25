@@ -19,6 +19,7 @@ import uk.co.perfecthomecomputers.yoyocinema.utils.DataSource
 import uk.co.perfecthomecomputers.yoyocinema.utils.FirstRun
 import uk.co.perfecthomecomputers.yoyocinema.utils.PreferenceHelper
 import uk.co.perfecthomecomputers.yoyocinema.utils.PreferenceHelper.get
+import uk.co.perfecthomecomputers.yoyocinema.utils.PreferenceHelper.set
 import java.io.Serializable
 
 class MainActivity : FragmentActivity(), AppbarFragment.OnFragmentInteractionListener , MovieListFragment.OnFragmentInteractionListener {
@@ -46,6 +47,16 @@ class MainActivity : FragmentActivity(), AppbarFragment.OnFragmentInteractionLis
             FirstRun.setup(this)
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //  If this passes a row number the movie was favourited / unfavourited in the detail view
+        val updateRow: Int = sharedPref["currentRowNo"]!!
+        if (updateRow >= 0) {
+            movieListFragment!!.updateRow(updateRow)
+        }
+        sharedPref["currentRowNo"] = -1
     }
 
     //  Search Text passed up from AppbarFragment
@@ -77,6 +88,7 @@ class MainActivity : FragmentActivity(), AppbarFragment.OnFragmentInteractionLis
                                     val cursor: Cursor = db.query("SELECT id FROM favourites WHERE id=" + results[i].id)
                                     cursor.moveToFirst()
                                     results[i].isFavourite = !cursor.isAfterLast
+                                    results[i].rowNumber = i
                                     cursor.close()
                                     i++
                                 }
@@ -90,6 +102,10 @@ class MainActivity : FragmentActivity(), AppbarFragment.OnFragmentInteractionLis
                         }
                     })
         }
+    }
+
+    //  Favourite Button Clicked passed up from AppbarFragment
+    override fun favouriteButtonClicked() {
     }
 
     //  Click Listener for RecyclerView

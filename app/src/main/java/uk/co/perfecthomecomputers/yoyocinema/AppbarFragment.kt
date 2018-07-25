@@ -14,6 +14,11 @@ import kotlinx.android.synthetic.main.fragment_appbar.*
 
 class AppbarFragment : Fragment() {
 
+    interface OnFragmentInteractionListener {
+        fun onSearchTextChanged(searchText: String)
+        fun favouriteButtonClicked()
+    }
+
     private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +40,10 @@ class AppbarFragment : Fragment() {
             }
             false
         }
+
+        favouritesButton.setOnClickListener {
+            listener?.favouriteButtonClicked()
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -49,10 +58,6 @@ class AppbarFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         listener = null
-    }
-
-    interface OnFragmentInteractionListener {
-        fun onSearchTextChanged(searchText: String)
     }
 
     private fun hideKeyboard() {

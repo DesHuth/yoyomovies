@@ -49,8 +49,13 @@ class Result: Serializable {
     @SerializedName("release_date")
     @Expose
     var releaseDate: String? = null
+    //  Added to returned result to track favourite status
     @SerializedName("is_favourite")
     @Expose
-    var isFavourite: Boolean? = false
+    var isFavourite: Boolean = false
+    //  Added to returned result so that detail view can update list
+    @SerializedName("row_number")
+    @Expose
+    var rowNumber: Int = -1
 
 }

@@ -19,6 +19,8 @@ class MovieListFragment : Fragment() {
     private lateinit var adapter: MoviesAdapter
     private var recyclerView: RecyclerView? = null
 
+    private lateinit var results: List<Result>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -54,6 +56,7 @@ class MovieListFragment : Fragment() {
 
     //  Pass in the click handler function so that row clicks can be handled here
     fun setData(context: Context, results: List<Result>) {
+        this.results = results
         adapter = MoviesAdapter(context, results, { result : Result -> itemClicked(result) })
         recyclerView!!.adapter = adapter
         adapter.notifyDataSetChanged()
@@ -63,5 +66,12 @@ class MovieListFragment : Fragment() {
     private fun itemClicked(result : Result) {
         //  Pass clicked item up to MainActivity
         listener?.onItemClicked(result)
+    }
+
+    //  Update favourite status for given row
+    fun updateRow(rowNo: Int) {
+        val isFavourite: Boolean = results[rowNo].isFavourite!!
+        results[rowNo].isFavourite = isFavourite.not()
+        adapter.notifyItemChanged(rowNo)
     }
 }
