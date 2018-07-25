@@ -52,7 +52,8 @@ class MovieListFragment : Fragment() {
         fun onItemClicked(item: Result)
     }
 
-    public fun setData(context: Context, results: List<Result>) {
+    //  Pass in the click handler function so that row clicks can be handled here
+    fun setData(context: Context, results: List<Result>) {
         adapter = MoviesAdapter(context, results, { result : Result -> itemClicked(result) })
         recyclerView!!.adapter = adapter
         adapter.notifyDataSetChanged()

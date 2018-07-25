@@ -6,6 +6,8 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.widget.CircularProgressDrawable
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -26,7 +28,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.util.DisplayMetrics
 import android.view.View
-import android.widget.ImageButton
+import uk.co.perfecthomecomputers.yoyocinema.objects.ProductionCompany
 import uk.co.perfecthomecomputers.yoyocinema.utils.DataSource
 import java.net.URLEncoder
 
@@ -133,13 +135,12 @@ class MovieDetailActivity : AppCompatActivity(), View.OnClickListener {
                 .addConverterFactory(GsonConverterFactory.create())
 
         val retrofit = builder.build()
-        val client = retrofit.create<YoyoClient>(YoyoClient::class.java!!)
+        val client = retrofit.create<YoyoClient>(YoyoClient::class.java)
         val call = client.getMovieDetails(movieID.toString())
 
         call.enqueue(
                 object : Callback<Movie> {
                     override fun onResponse(call: Call<Movie>, response: Response<Movie>) {
-                        Log.d("YOYO", "RESPONSE CODE: "+ response.code())
                         if (response.code() == 200) {
                             movie = response.body()!!
 

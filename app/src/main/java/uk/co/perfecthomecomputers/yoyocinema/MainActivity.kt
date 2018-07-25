@@ -60,13 +60,12 @@ class MainActivity : FragmentActivity(), AppbarFragment.OnFragmentInteractionLis
                     .addConverterFactory(GsonConverterFactory.create())
 
             val retrofit = builder.build()
-            val client = retrofit.create<YoyoClient>(YoyoClient::class.java!!)
+            val client = retrofit.create<YoyoClient>(YoyoClient::class.java)
             val call = client.getSearchResults(searchText)
 
             call.enqueue(
                     object : Callback<SearchResults> {
                         override fun onResponse(call: Call<SearchResults>, response: Response<SearchResults>) {
-                            Log.d("YOYO", "RESPONSE CODE: "+ response.code())
                             if (response.code() == 200) {
                                 val db = DataSource(context)
                                 db.open()
@@ -94,9 +93,9 @@ class MainActivity : FragmentActivity(), AppbarFragment.OnFragmentInteractionLis
     }
 
     //  Click Listener for RecyclerView
-    override fun onItemClicked(result : Result) {
+    override fun onItemClicked(item : Result) {
         intent = Intent(this, MovieDetailActivity::class.java)
-        intent.putExtra("result", result as Serializable)
+        intent.putExtra("result", item as Serializable)
         startActivity(intent)
     }
 }

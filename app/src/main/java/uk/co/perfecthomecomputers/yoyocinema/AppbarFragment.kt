@@ -28,7 +28,7 @@ class AppbarFragment : Fragment() {
         super.onStart()
         //  Add listeners to EditText
         searchText.addTextChangedListener(textWatcher)
-        searchText.setOnKeyListener { v, keyCode, event ->
+        searchText.setOnKeyListener { view, keyCode, event ->
             if ((event?.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                 hideKeyboard()
                 return@setOnKeyListener true

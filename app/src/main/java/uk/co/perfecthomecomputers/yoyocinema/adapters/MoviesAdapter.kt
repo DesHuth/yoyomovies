@@ -80,7 +80,6 @@ class MoviesAdapter(c: Context, val moviesList: List<Result>, val clickListener:
 
         //  Favourite Button Click Handler
         holder.favouriteButton.setOnClickListener {
-            val db = DataSource(context)
             db.open()
             if (moviesList[position].isFavourite!!) {
                 moviesList[position].isFavourite = false
